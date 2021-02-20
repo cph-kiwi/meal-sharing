@@ -91,7 +91,7 @@ router.put("/:id", async (request, response) => {
 router.delete("/:id", async (request, response) => {
   try {
     await knex("meal")
-      .where({ id: parseInt(request.params.id) })
+      .where({ id: Number(request.params.id) })
       .del();
     return response.status(204).json({});
   } catch (error) {
