@@ -48,7 +48,7 @@ function Meal({ meals }) {
           <p>
             Seats available:{" "}
             {meal.max_reservations - totalReservedSpaces <= 0 ? (
-              <p>Fully booked!</p>
+              <span>Fully booked!</span>
             ) : (
               meal.max_reservations - totalReservedSpaces
             )}
@@ -66,8 +66,10 @@ function Meal({ meals }) {
         show={show}
         onClose={() => setShow(false)}
         onSubmitReservation={(reservation) => {
+          //   console.log("reservations before", reservations);
           setShow(false);
           setReservations((prev) => {
+            // console.log("reservations after", prev.concat(reservation));
             return prev.concat(reservation);
           });
         }}

@@ -66,7 +66,7 @@ export function AddReservationModal({
           <label htmlFor="phoneNumber">Contact phone number:</label>
           <input
             id="phoneNumber"
-            type="number"
+            type="text"
             value={reservation.phoneNumber}
             onChange={onChangePhoneNumber}
           />

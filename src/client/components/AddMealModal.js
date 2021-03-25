@@ -69,12 +69,12 @@ export function AddMealModal({ onSubmitMeal, show, onClose }) {
           />
           <br />
           <label htmlFor="description">Description:</label>
-          <input
+          <textarea
             id="description"
-            type="text"
             value={meal.description}
             onChange={onChangeDescription}
           />
+
           <br />
           <label htmlFor="location">Location:</label>
           <input

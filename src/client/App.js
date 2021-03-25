@@ -49,8 +49,10 @@ function App() {
             show={show}
             onClose={() => setShow(false)}
             onSubmitMeal={(meal) => {
+              // console.log("meals before", meals);
               setShow(false);
               setMeals((prev) => {
+                // console.log("meals after", prev.concat(meal));
                 return prev.concat(meal);
               });
             }}
