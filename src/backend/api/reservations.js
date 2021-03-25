@@ -5,8 +5,13 @@ const getReservation = require("../modules/getReservation");
 
 router.get("/", async (request, response) => {
   try {
-    const reservations = await knex("reservation").select("*");
-    response.json(reservations);
+    // const reservations = await knex("reservation").select("*");
+    let dbQuery = knex("reservation");
+    if (request.query.mealId !== undefined) {
+      dbQuery = dbQuery.where("meal_id", "=", request.query.mealId);
+    }
+    const reservations = await dbQuery;
+    return response.json(reservations);
   } catch (error) {
     throw error;
   }
