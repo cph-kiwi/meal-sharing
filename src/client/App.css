@@ -6,6 +6,33 @@
   text-align: center;
 } */
 
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-indicator::before {
+  content: "";
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--plum);
+  border-top-color: white;
+  display: inline-block;
+  animation: App-logo-spin 500ms linear infinite;
+  align-content: center;
+}
+
 body {
   min-height: 100vh;
 
@@ -139,4 +166,10 @@ footer {
 
 .modal-h1 {
   text-align: center;
+}
+
+.Border {
+  padding: 10px 10px;
+  border: 10px solid;
+  border-color: var(--plum);
 }

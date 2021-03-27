@@ -49,7 +49,11 @@ function Meal() {
 
   return (
     <div>
-      {isLoading && <div>Loading...</div>}
+      {isLoading && (
+        <div className="loading-indicator">
+          <p>Loading meal</p>
+        </div>
+      )}
 
       {!isLoading && !meal && <div>Not Found</div>}
 

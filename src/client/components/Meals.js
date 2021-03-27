@@ -6,6 +6,7 @@ const API = "http://localhost:5000/api/meals";
 
 function Meals() {
   const [isLoading, setIsLoading] = useState(true);
+
   const [meals, setMeals] = useState([]);
   const [show, setShow] = useState(false);
 
@@ -24,7 +25,11 @@ function Meals() {
 
   return (
     <div>
-      {isLoading && <div>Loading...</div>}
+      {isLoading && (
+        <div className="loading-indicator">
+          <p>Loading meals</p>
+        </div>
+      )}
       <button className="button" onClick={() => setShow(true)}>
         Add meal
       </button>
