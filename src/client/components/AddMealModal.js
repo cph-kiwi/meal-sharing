@@ -6,48 +6,36 @@ export function AddMealModal({ onSubmitMeal, show, onClose }) {
     description: "",
     location: "",
     when: "",
-    maxReservations: 0,
+    max_reservations: 0,
     price: 0,
   });
 
-  const onChangeTitle = (event) => {
-    setMeal({ ...meal, title: event.target.value });
-  };
-
-  const onChangeDescription = (event) => {
-    setMeal({ ...meal, description: event.target.value });
-  };
-
-  const onChangeLocation = (event) => {
-    setMeal({ ...meal, location: event.target.value });
-  };
-
-  const onChangeWhen = (event) => {
-    setMeal({ ...meal, when: event.target.value });
-  };
-
-  const onChangeMaxReservations = (event) => {
-    setMeal({ ...meal, maxReservations: event.target.value });
-  };
-
-  const onChangePrice = (event) => {
-    setMeal({ ...meal, price: event.target.value });
-  };
-
   const submitMeal = (event) => {
     event.preventDefault();
-    onSubmitMeal(meal);
-    setMeal((prev) => {
-      return {
-        ...prev,
-        title: "",
-        description: "",
-        location: "",
-        when: "",
-        maxReservations: 0,
-        price: 0,
-      };
-    });
+    fetch("http://localhost:5000/api/meals", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(meal),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        onSubmitMeal();
+        setMeal((prev) => {
+          return {
+            ...prev,
+            title: "",
+            description: "",
+            location: "",
+            when: "",
+            max_reservations: 0,
+            price: 0,
+          };
+        });
+      })
+      .catch((error) => {
+        console.log("There was a POSTing error with meal", error.message);
+      });
   };
 
   if (!show) {
@@ -64,7 +52,9 @@ export function AddMealModal({ onSubmitMeal, show, onClose }) {
             id="title"
             type="text"
             value={meal.title}
-            onChange={onChangeTitle}
+            onChange={(event) => {
+              setMeal({ ...meal, title: event.target.value });
+            }}
             autoFocus={true}
           />
           <br />
@@ -72,7 +62,9 @@ export function AddMealModal({ onSubmitMeal, show, onClose }) {
           <textarea
             id="description"
             value={meal.description}
-            onChange={onChangeDescription}
+            onChange={(event) => {
+              setMeal({ ...meal, description: event.target.value });
+            }}
           />
 
           <br />
@@ -81,7 +73,9 @@ export function AddMealModal({ onSubmitMeal, show, onClose }) {
             id="location"
             type="text"
             value={meal.location}
-            onChange={onChangeLocation}
+            onChange={(event) => {
+              setMeal({ ...meal, location: event.target.value });
+            }}
           />
           <br />
           <label htmlFor="when">When:</label>
@@ -90,15 +84,19 @@ export function AddMealModal({ onSubmitMeal, show, onClose }) {
             type="datetime-local"
             name="when"
             value={meal.when}
-            onChange={onChangeWhen}
+            onChange={(event) => {
+              setMeal({ ...meal, when: event.target.value });
+            }}
           />
           <br />
-          <label htmlFor="maxReservations">Maximum reservations:</label>
+          <label htmlFor="max_reservations">Maximum reservations:</label>
           <input
-            id="maxReservations"
+            id="max_reservations"
             type="number"
-            value={meal.maxReservations}
-            onChange={onChangeMaxReservations}
+            value={meal.max_reservations}
+            onChange={(event) => {
+              setMeal({ ...meal, max_reservations: event.target.value });
+            }}
           />
           <br />
           <label htmlFor="price">Price:</label>
@@ -106,7 +104,9 @@ export function AddMealModal({ onSubmitMeal, show, onClose }) {
             id="price"
             type="number"
             value={meal.price}
-            onChange={onChangePrice}
+            onChange={(event) => {
+              setMeal({ ...meal, price: event.target.value });
+            }}
           />
           <br />
 

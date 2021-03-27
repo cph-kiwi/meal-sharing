@@ -2,26 +2,34 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { AddReservationModal } from "./AddReservationModal";
 
-function Meal({ meals }) {
+function Meal() {
   const [isLoading, setIsLoading] = useState(true);
   const [reservations, setReservations] = useState([]);
+  const [meal, setMeal] = useState();
   const [show, setShow] = useState(false);
 
   const params = useParams();
-  const meal = meals.find((meal) => meal.id === Number(params.id));
+
+  const fetchMyReservations = () => {
+    fetch(`http://localhost:5000/api/reservations/?mealId=${params.id}`)
+      .then((response) => response.json())
+      .then(setReservations)
+      .catch((error) => console.log("error.message in Meal.js", error.message));
+  };
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`http://localhost:5000/api/reservations/?mealId=${params.id}`)
+
+    fetch(`http://localhost:5000/api/meals/${params.id}`)
       .then((response) => response.json())
       .then((data) => {
-        setReservations((prev) => {
-          return prev.concat(data);
-        });
+        setMeal(data);
         setIsLoading(false);
       })
       .catch((error) => console.log("error.message in Meal.js", error.message));
-  }, []);
+
+    fetchMyReservations();
+  }, [params.id]);
 
   const numbersOfGuests = reservations.map((reservation) =>
     Number(reservation.number_of_guests)
@@ -34,11 +42,12 @@ function Meal({ meals }) {
 
   return (
     <div>
-      {!meal ? (
-        <div>Not Found</div>
-      ) : (
+      {isLoading && <div>Loading...</div>}
+
+      {!isLoading && !meal && <div>Not Found</div>}
+
+      {!isLoading && meal && (
         <div>
-          {isLoading && <div>Loading...</div>}
           <h2>{meal.title}</h2>
           <p>{meal.description}</p>
           <p>{meal.when}</p>
@@ -61,19 +70,17 @@ function Meal({ meals }) {
         Add reservation
       </button>
 
-      <AddReservationModal
-        mealId={meal.id}
-        show={show}
-        onClose={() => setShow(false)}
-        onSubmitReservation={(reservation) => {
-          //   console.log("reservations before", reservations);
-          setShow(false);
-          setReservations((prev) => {
-            // console.log("reservations after", prev.concat(reservation));
-            return prev.concat(reservation);
-          });
-        }}
-      />
+      {meal && (
+        <AddReservationModal
+          mealId={meal.id}
+          show={show}
+          onClose={() => setShow(false)}
+          onSubmitReservation={() => {
+            setShow(false);
+            fetchMyReservations();
+          }}
+        />
+      )}
 
       <hr />
       <Link to="/">Go back to home</Link>

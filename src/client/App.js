@@ -15,56 +15,55 @@ function App() {
   const [meals, setMeals] = useState([]);
   const [show, setShow] = useState(false);
 
-  useEffect(() => {
+  const fetchMyMeals = () => {
     setIsLoading(true);
     fetch(API)
       .then((response) => response.json())
       .then((data) => {
-        setMeals((prev) => {
-          return prev.concat(data);
-        });
+        setMeals(data);
         setIsLoading(false);
       })
       .catch((error) => console.log("error.message in App.js", error.message));
-  }, []);
+  };
+
+  useEffect(fetchMyMeals, []);
 
   return (
     <div className="app">
       <Nav />
-      <h1 className="large-title">Dinner Time</h1>
-      <p className="medium-title">A Meal Sharing App</p>
-      <p>
-        Become a host or a guest, and share delightful dinner times with new
-        friends
-      </p>
+      <div className="main-body">
+        <h1 className="large-title">Dinner Time</h1>
+        <p className="medium-title">A Meal Sharing App</p>
+        <p>
+          Become a host or a guest, and share delightful dinner times with new
+          friends
+        </p>
 
-      {isLoading && <div>Loading...</div>}
-      <Switch>
-        <Route exact path="/" component={Home}>
-          <button className="button" onClick={() => setShow(true)}>
-            Add meal
-          </button>
+        {isLoading && <div>Loading...</div>}
+        <Switch>
+          <Route exact path="/" component={Home}>
+            <button className="button" onClick={() => setShow(true)}>
+              Add meal
+            </button>
 
-          <AddMealModal
-            show={show}
-            onClose={() => setShow(false)}
-            onSubmitMeal={(meal) => {
-              // console.log("meals before", meals);
-              setShow(false);
-              setMeals((prev) => {
-                // console.log("meals after", prev.concat(meal));
-                return prev.concat(meal);
-              });
-            }}
-          />
+            <AddMealModal
+              show={show}
+              onClose={() => setShow(false)}
+              onSubmitMeal={() => {
+                // console.log("meals before", meals);
+                setShow(false);
+                fetchMyMeals();
+              }}
+            />
 
-          <Meals meals={meals} />
-        </Route>
-        <Route path="/meal/:id" component={() => <Meal meals={meals} />} />
-        <Route path="*">
-          <div>404 not found</div>
-        </Route>
-      </Switch>
+            <Meals meals={meals} />
+          </Route>
+          <Route path="/meal/:id" component={() => <Meal meals={meals} />} />
+          <Route path="*">
+            <div>404 not found</div>
+          </Route>
+        </Switch>
+      </div>
       <Footer />
     </div>
   );

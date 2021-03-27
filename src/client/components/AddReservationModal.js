@@ -7,42 +7,39 @@ export function AddReservationModal({
   onClose,
 }) {
   const [reservation, setReservation] = useState({
-    numberOfGuests: 0,
-    mealId: mealId,
-    phoneNumber: "",
+    number_of_guests: 0,
+    phone_number: "",
     name: "",
     email: "",
   });
 
-  const onChangeNumberOfGuests = (event) => {
-    setReservation({ ...reservation, numberOfGuests: event.target.value });
-  };
-
-  const onChangePhoneNumber = (event) => {
-    setReservation({ ...reservation, phoneNumber: event.target.value });
-  };
-
-  const onChangeName = (event) => {
-    setReservation({ ...reservation, name: event.target.value });
-  };
-
-  const onChangeEmail = (event) => {
-    setReservation({ ...reservation, email: event.target.value });
-  };
-
   const submitReservation = (event) => {
     event.preventDefault();
-    onSubmitReservation(reservation);
-    setReservation((prev) => {
-      return {
-        ...prev,
-        numberOfGuests: 0,
-        mealId: mealId,
-        phoneNumber: "",
-        name: "",
-        email: "",
-      };
-    });
+    fetch("http://localhost:5000/api/reservations", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...reservation, meal_id: mealId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        onSubmitReservation(reservation);
+        setReservation((prev) => {
+          return {
+            ...prev,
+            number_of_guests: 0,
+            phone_number: "",
+            name: "",
+            email: "",
+          };
+        });
+      })
+      .catch((error) => {
+        console.log(
+          "There was a POSTing error with reservation",
+          error.message
+        );
+      });
   };
 
   if (!show) {
@@ -54,21 +51,31 @@ export function AddReservationModal({
       <div className="overlay" onClick={(event) => event.stopPropagation()}>
         <h1 className="large-title">Add Reservation</h1>
         <form className="form" onSubmit={submitReservation}>
-          <label htmlFor="numberOfGuests">Number of guests:</label>
+          <label htmlFor="number_of_guests">Number of guests:</label>
           <input
-            id="numberOfGuests"
+            id="number_of_guests"
             type="number"
-            value={reservation.numberOfGuests}
-            onChange={onChangeNumberOfGuests}
+            value={reservation.number_of_guests}
+            onChange={(event) => {
+              setReservation({
+                ...reservation,
+                number_of_guests: event.target.value,
+              });
+            }}
             autoFocus={true}
           />
           <br />
-          <label htmlFor="phoneNumber">Contact phone number:</label>
+          <label htmlFor="phone_number">Contact phone number:</label>
           <input
-            id="phoneNumber"
+            id="phone_number"
             type="text"
-            value={reservation.phoneNumber}
-            onChange={onChangePhoneNumber}
+            value={reservation.phone_number}
+            onChange={(event) => {
+              setReservation({
+                ...reservation,
+                phone_number: event.target.value,
+              });
+            }}
           />
           <br />
 
@@ -77,7 +84,9 @@ export function AddReservationModal({
             id="name"
             type="text"
             value={reservation.name}
-            onChange={onChangeName}
+            onChange={(event) => {
+              setReservation({ ...reservation, name: event.target.value });
+            }}
           />
           <br />
           <label htmlFor="email">Contact email:</label>
@@ -85,7 +94,9 @@ export function AddReservationModal({
             id="email"
             type="text"
             value={reservation.email}
-            onChange={onChangeEmail}
+            onChange={(event) => {
+              setReservation({ ...reservation, email: event.target.value });
+            }}
           />
           <br />
 

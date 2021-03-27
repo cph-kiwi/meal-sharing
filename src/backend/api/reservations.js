@@ -19,6 +19,7 @@ router.get("/", async (request, response) => {
 
 router.post("/", async (request, response) => {
   try {
+    console.log(request.body);
     return await knex("reservation")
       .insert(request.body)
       .then((reservationId) => {
