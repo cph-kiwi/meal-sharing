@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { AddReservationModal } from "./AddReservationModal";
+import Reviews from "./Reviews";
 
 function Meal() {
   const [isLoading, setIsLoading] = useState(true);
@@ -80,6 +81,8 @@ function Meal() {
               Add reservation
             </button>
           )}
+
+          <Reviews mealId={params.id} />
         </div>
       )}
 
