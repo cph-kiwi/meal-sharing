@@ -76,13 +76,15 @@ function Meal() {
           </p>
           <p>{meal.price}dk</p>
 
-          {meal.max_reservations - totalReservedSpaces <= 0 ? null : (
-            <button className="button" onClick={() => setShow(true)}>
-              Add reservation
-            </button>
+          {meal.when > new Date().toISOString() ? (
+            meal.max_reservations - totalReservedSpaces <= 0 ? null : (
+              <button className="button" onClick={() => setShow(true)}>
+                Add reservation
+              </button>
+            )
+          ) : (
+            <Reviews mealId={params.id} />
           )}
-
-          <Reviews mealId={params.id} />
         </div>
       )}
 
