@@ -1,9 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { AddMealModal } from "./AddMealModal";
 
-function Meals({ meals }) {
+const API = "http://localhost:5000/api/meals";
+
+function Meals() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [meals, setMeals] = useState([]);
+  const [show, setShow] = useState(false);
+
+  const fetchMyMeals = () => {
+    setIsLoading(true);
+    fetch(API)
+      .then((response) => response.json())
+      .then((data) => {
+        setMeals(data);
+        setIsLoading(false);
+      })
+      .catch((error) => console.log("error.message in App.js", error.message));
+  };
+
+  useEffect(fetchMyMeals, []);
+
   return (
     <div>
+      {isLoading && <div>Loading...</div>}
+      <button className="button" onClick={() => setShow(true)}>
+        Add meal
+      </button>
+
+      {show && (
+        <AddMealModal
+          onClose={() => setShow(false)}
+          onSuccessMeal={fetchMyMeals}
+        />
+      )}
+
       {meals.map((meal) => (
         <article key={meal.id}>
           <Link to={`/meal/${meal.id}`}>

@@ -1,33 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Route, Switch } from "react-router-dom";
 // import TestComponent from "./components/TestComponent/TestComponent";
-import { AddMealModal } from "./components/AddMealModal";
+
 import Meals from "./components/Meals";
 import Meal from "./components/Meal";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import "./App.css";
 
-const API = "http://localhost:5000/api/meals";
-
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [meals, setMeals] = useState([]);
-  const [show, setShow] = useState(false);
-
-  const fetchMyMeals = () => {
-    setIsLoading(true);
-    fetch(API)
-      .then((response) => response.json())
-      .then((data) => {
-        setMeals(data);
-        setIsLoading(false);
-      })
-      .catch((error) => console.log("error.message in App.js", error.message));
-  };
-
-  useEffect(fetchMyMeals, []);
-
   return (
     <div className="app">
       <Nav />
@@ -39,26 +20,11 @@ function App() {
           friends
         </p>
 
-        {isLoading && <div>Loading...</div>}
         <Switch>
           <Route exact path="/" component={Home}>
-            <button className="button" onClick={() => setShow(true)}>
-              Add meal
-            </button>
-
-            <AddMealModal
-              show={show}
-              onClose={() => setShow(false)}
-              onSubmitMeal={() => {
-                // console.log("meals before", meals);
-                setShow(false);
-                fetchMyMeals();
-              }}
-            />
-
-            <Meals meals={meals} />
+            <Meals />
           </Route>
-          <Route path="/meal/:id" component={() => <Meal meals={meals} />} />
+          <Route path="/meal/:id" component={() => <Meal />} />
           <Route path="*">
             <div>404 not found</div>
           </Route>
@@ -76,19 +42,3 @@ const Home = () => (
 );
 
 export default App;
-
-/*
-
-    <Router>
-      <Route exact path="/">
-        <p>test</p>
-      </Route>
-      <Route exact path="/lol">
-        <p>lol</p>
-      </Route>
-      <Route exact path="/test-component">
-        <TestComponent></TestComponent>
-      </Route>
-    </Router>
-
-*/

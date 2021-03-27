@@ -35,7 +35,7 @@ router.get("/", async (request, response) => {
     }
 
     if (typeof title === "string") {
-      dbQuery = dbQuery.where("title", "like", `%${title}%`);
+      dbQuery = dbQuery.where("title", "ilike", `%${title}%`);
     }
     if (createdAfter !== undefined) {
       dbQuery = dbQuery.where("created_date", ">", createdAfter);
@@ -52,17 +52,16 @@ router.get("/", async (request, response) => {
 
 router.post("/", async (request, response) => {
   try {
-    return await knex("meal")
-      .insert(request.body)
-      .then((mealId) => {
-        knex("meal")
-          .where({ id: mealId[0] })
-          .then((selectedMeal) => {
-            response.status(201).json(selectedMeal[0]);
-          });
-      });
+    const [mealId] = await knex("meal").insert({
+      ...request.body,
+      created_date: new Date(),
+    });
+
+    const [selectedMeal] = await knex("meal").where({ id: mealId });
+
+    response.status(201).json(selectedMeal);
   } catch (error) {
-    throw error;
+    response.status(400).json({ message: error.sqlMessage });
   }
 });
 

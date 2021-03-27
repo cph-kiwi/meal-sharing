@@ -10,10 +10,17 @@ function Meal() {
 
   const params = useParams();
 
+  function formatDate(date) {
+    return `${date.slice(0, 10)} ${date.slice(11, 16)}`;
+  }
+
   const fetchMyReservations = () => {
     fetch(`http://localhost:5000/api/reservations/?mealId=${params.id}`)
       .then((response) => response.json())
-      .then(setReservations)
+      .then((data) => {
+        setReservations(data);
+        setIsLoading(false);
+      })
       .catch((error) => console.log("error.message in Meal.js", error.message));
   };
 
@@ -50,7 +57,7 @@ function Meal() {
         <div>
           <h2>{meal.title}</h2>
           <p>{meal.description}</p>
-          <p>{meal.when}</p>
+          <p>{formatDate(meal.when)}</p>
 
           <p>{meal.location}</p>
           <p>Max reservations: {meal.max_reservations}</p>
@@ -63,22 +70,20 @@ function Meal() {
             )}
           </p>
           <p>{meal.price}dk</p>
+
+          {meal.max_reservations - totalReservedSpaces <= 0 ? null : (
+            <button className="button" onClick={() => setShow(true)}>
+              Add reservation
+            </button>
+          )}
         </div>
       )}
 
-      <button className="button" onClick={() => setShow(true)}>
-        Add reservation
-      </button>
-
-      {meal && (
+      {meal && show && (
         <AddReservationModal
           mealId={meal.id}
-          show={show}
           onClose={() => setShow(false)}
-          onSubmitReservation={() => {
-            setShow(false);
-            fetchMyReservations();
-          }}
+          onSuccessReservation={fetchMyReservations}
         />
       )}
 

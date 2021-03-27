@@ -15,7 +15,7 @@ router.get("/", async (request, response) => {
 router.post("/", async (request, response) => {
   try {
     return await knex("review")
-      .insert(request.body)
+      .insert({ ...request.body, created_date: new Date() })
       .then((reviewId) => {
         knex("review")
           .where({ id: reviewId[0] })

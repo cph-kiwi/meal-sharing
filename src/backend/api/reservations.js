@@ -19,18 +19,18 @@ router.get("/", async (request, response) => {
 
 router.post("/", async (request, response) => {
   try {
-    console.log(request.body);
-    return await knex("reservation")
-      .insert(request.body)
-      .then((reservationId) => {
-        knex("reservation")
-          .where({ id: reservationId[0] })
-          .then((selectedReservation) => {
-            response.status(201).json(selectedReservation[0]);
-          });
-      });
+    const [reservationId] = await knex("reservation").insert({
+      ...request.body,
+      created_date: new Date(),
+    });
+
+    const [selectedReservation] = await knex("reservation").where({
+      id: reservationId,
+    });
+
+    response.status(201).json(selectedReservation);
   } catch (error) {
-    throw error;
+    response.status(400).json({ message: error.sqlMessage });
   }
 });
 
