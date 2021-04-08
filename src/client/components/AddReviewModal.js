@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Border from "./Border";
 
+const apiHost = `//${window.location.host}:5000/api`;
+
 export function AddReviewModal({ mealId, onSuccessReview, onClose }) {
   const [review, setReview] = useState({
     title: "",
@@ -15,7 +17,7 @@ export function AddReviewModal({ mealId, onSuccessReview, onClose }) {
     event.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:5000/api/reviews", {
+      const response = await fetch(`${apiHost}/reviews`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...review, meal_id: mealId }),

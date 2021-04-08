@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AddMealModal } from "./AddMealModal";
 
-const API = "http://localhost:5000/api/meals";
+const apiHost = `//${window.location.host}:5000/api`;
+
+const API = `${apiHost}/meals`;
 
 function Meals() {
   const [isLoading, setIsLoading] = useState(true);

@@ -3,6 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { AddReservationModal } from "./AddReservationModal";
 import Reviews from "./Reviews";
 
+const apiHost = `//${window.location.host}:5000/api`;
+
 function Meal() {
   const [isLoading, setIsLoading] = useState(true);
   const [reservations, setReservations] = useState([]);
@@ -16,7 +18,7 @@ function Meal() {
   }
 
   const fetchMyReservations = () => {
-    fetch(`http://localhost:5000/api/reservations/?mealId=${params.id}`)
+    fetch(`${apiHost}/reservations/?mealId=${params.id}`)
       .then((response) => response.json())
       .then((data) => {
         setReservations(data);
@@ -28,7 +30,7 @@ function Meal() {
   useEffect(() => {
     setIsLoading(true);
 
-    fetch(`http://localhost:5000/api/meals/${params.id}`)
+    fetch(`${apiHost}/meals/${params.id}`)
       .then((response) => response.json())
       .then((data) => {
         setMeal(data);
