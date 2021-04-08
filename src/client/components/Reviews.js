@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { AddReviewModal } from "./AddReviewModal";
 
-const apiHost = `//${window.location.host}:5000/api`;
+const apiHost = `//${window.location.hostname}:5000/api`;
 
 function Reviews({ mealId }) {
   const [isLoading, setIsLoading] = useState(true);

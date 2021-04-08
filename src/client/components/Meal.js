@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { AddReservationModal } from "./AddReservationModal";
 import Reviews from "./Reviews";
 
-const apiHost = `//${window.location.host}:5000/api`;
+const apiHost = `//${window.location.hostname}:5000/api`;
 
 function Meal() {
   const [isLoading, setIsLoading] = useState(true);

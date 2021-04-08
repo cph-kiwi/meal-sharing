@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Border from "./Border";
 
-const apiHost = `//${window.location.host}:5000/api`;
+const apiHost = `//${window.location.hostname}:5000/api`;
 
 export function AddMealModal({ onSuccessMeal, onClose }) {
   const [meal, setMeal] = useState({

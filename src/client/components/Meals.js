@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AddMealModal } from "./AddMealModal";
 
-const apiHost = `//${window.location.host}:5000/api`;
+const apiHost = `//${window.location.hostname}:5000/api`;
 
 const API = `${apiHost}/meals`;
 
