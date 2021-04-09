@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import Border from "./Border";
 
-const apiHost = `//${window.location.hostname}:5000/api`;
-
 export function AddMealModal({ onSuccessMeal, onClose }) {
   const [meal, setMeal] = useState({
     title: "",
@@ -19,7 +17,7 @@ export function AddMealModal({ onSuccessMeal, onClose }) {
   const submitMeal = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch(`${apiHost}/meals`, {
+      const response = await fetch("/api/meals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(meal),

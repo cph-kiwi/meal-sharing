@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AddReviewModal } from "./AddReviewModal";
 
-const apiHost = `//${window.location.hostname}:5000/api`;
-
 function Reviews({ mealId }) {
   const [isLoading, setIsLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
@@ -10,7 +8,7 @@ function Reviews({ mealId }) {
 
   const fetchMyReviews = () => {
     setIsLoading(true);
-    fetch(`${apiHost}/reviews/?mealId=${mealId}`)
+    fetch(`/api/reviews/?mealId=${mealId}`)
       .then((response) => response.json())
       .then((data) => {
         setReviews(data);

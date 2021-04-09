@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import Border from "./Border";
 
-const apiHost = `//${window.location.hostname}:5000/api`;
-
 export function AddReservationModal({ mealId, onSuccessReservation, onClose }) {
   const [reservation, setReservation] = useState({
     number_of_guests: 0,
@@ -18,7 +16,7 @@ export function AddReservationModal({ mealId, onSuccessReservation, onClose }) {
     event.preventDefault();
 
     try {
-      const response = await fetch(`${apiHost}/reservations`, {
+      const response = await fetch("/api/reservations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...reservation, meal_id: mealId }),
