@@ -5,8 +5,13 @@ const getReservation = require("../modules/getReservation");
 
 router.get("/", async (request, response) => {
   try {
-    const reservations = await knex("reservation").select("*");
-    response.json(reservations);
+    // const reservations = await knex("reservation").select("*");
+    let dbQuery = knex("reservation");
+    if (request.query.mealId !== undefined) {
+      dbQuery = dbQuery.where("meal_id", "=", request.query.mealId);
+    }
+    const reservations = await dbQuery;
+    return response.json(reservations);
   } catch (error) {
     throw error;
   }
@@ -14,17 +19,18 @@ router.get("/", async (request, response) => {
 
 router.post("/", async (request, response) => {
   try {
-    return await knex("reservation")
-      .insert(request.body)
-      .then((reservationId) => {
-        knex("reservation")
-          .where({ id: reservationId[0] })
-          .then((selectedReservation) => {
-            response.status(201).json(selectedReservation[0]);
-          });
-      });
+    const [reservationId] = await knex("reservation").insert({
+      ...request.body,
+      created_date: new Date(),
+    });
+
+    const [selectedReservation] = await knex("reservation").where({
+      id: reservationId,
+    });
+
+    response.status(201).json(selectedReservation);
   } catch (error) {
-    throw error;
+    response.status(400).json({ message: error.sqlMessage });
   }
 });
 

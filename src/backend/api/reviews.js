@@ -5,8 +5,12 @@ const getReview = require("../modules/getReview");
 
 router.get("/", async (request, response) => {
   try {
-    const reviews = await knex("review").select("*");
-    response.json(reviews);
+    let dbQuery = knex("review");
+    if (request.query.mealId !== undefined) {
+      dbQuery = dbQuery.where("meal_id", "=", request.query.mealId);
+    }
+    const reviews = await dbQuery;
+    return response.json(reviews);
   } catch (error) {
     throw error;
   }
@@ -14,17 +18,18 @@ router.get("/", async (request, response) => {
 
 router.post("/", async (request, response) => {
   try {
-    return await knex("review")
-      .insert(request.body)
-      .then((reviewId) => {
-        knex("review")
-          .where({ id: reviewId[0] })
-          .then((selectedReview) => {
-            response.status(201).json(selectedReview[0]);
-          });
-      });
+    const [reviewId] = await knex("review").insert({
+      ...request.body,
+      created_date: new Date(),
+    });
+
+    const [selectedReview] = await knex("review").where({
+      id: reviewId,
+    });
+
+    response.status(201).json(selectedReview);
   } catch (error) {
-    throw error;
+    response.status(400).json({ message: error.sqlMessage });
   }
 });
 
